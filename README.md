@@ -63,7 +63,7 @@ Computes eigenvalues for all valid numerators \$p\$ for a given denominator \$q\
 
 #### 4. `generate_hofstadter_spectrum(max_q=50)`
 
-Generates the complete spectrum for all \$\alpha = p/q\$ with denominators $q \leq \text{max\_q}$.
+Generates the complete spectrum for all \$\alpha = p/q\$ with denominators $q \leq \text{max\q}$.
 
 * Uses **joblib** for parallel computation.
 * Returns two arrays:
