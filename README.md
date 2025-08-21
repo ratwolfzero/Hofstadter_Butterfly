@@ -86,7 +86,7 @@ Plots the Hofstadter butterfly with:
 Running:
 
 ```bash
-python hofstadter.py
+python hofstadter_butterfly.py
 ```
 
 will produce a high-resolution visualization of the Hofstadter butterfly:
