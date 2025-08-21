@@ -83,8 +83,6 @@ Plots the Hofstadter butterfly with:
 
 ## 📊 Example Output
 
-![Header Image](./Butterfly.png)
-
 Running:
 
 ```bash
@@ -93,7 +91,7 @@ python hofstadter.py
 
 will produce a high-resolution visualization of the Hofstadter butterfly:
 
-![Example Output](example.png)  <!-- Replace with actual screenshot -->
+![Butterfly](./Butterfly.png)
 
 ---
 
