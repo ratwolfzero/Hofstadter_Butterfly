@@ -26,7 +26,6 @@ H_{n,m} = 2 \cos(2 \pi \alpha n) \, \delta_{n,m}
 +\delta_{n,m+1} + \delta_{n,m-1}
 $$
 
-
 Here:
 
 * \$n, m \in {0, 1, \dots, q-1}\$ are lattice indices
