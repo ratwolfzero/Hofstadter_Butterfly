@@ -83,6 +83,8 @@ Plots the Hofstadter butterfly with:
 
 ## 📊 Example Output
 
+![Header Image](./Butterfly.png)
+
 Running:
 
 ```bash
