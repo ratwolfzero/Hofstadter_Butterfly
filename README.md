@@ -23,7 +23,7 @@ The Harper Hamiltonian for a \$q \times q\$ system with magnetic flux \$\alpha =
 
 $$
 H_{n,m} = 2 \cos(2 \pi \alpha n) \, \delta_{n,m}
-+ \delta_{n,m+1} + \delta_{n,m-1}
++\delta_{n,m+1} + \delta_{n,m-1}
 $$
 
 
