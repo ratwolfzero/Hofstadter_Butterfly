@@ -10,8 +10,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    max_q: int = 150
-    grid_res: int = 200
+    max_q: int = 100
+    grid_res: int = 100
     bw_method: float = 0.1
     figsize: tuple = (8, 6)
     dpi: int = 150
