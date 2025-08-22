@@ -6,6 +6,8 @@ from scipy.stats import gaussian_kde
 from dataclasses import dataclass
 
 # ---------------- CONFIG ----------------
+
+
 @dataclass
 class Config:
     max_q: int = 150
@@ -17,12 +19,16 @@ class Config:
     cmap_scatter: str = "magma"
 
 # ---------------- CORE COMPUTATION ----------------
-def hofstadter_hamiltonian(q, alpha):            
-    """Return sorted eigenvalues of the Harper Hamiltonian with flux α = p/q."""         
+
+
+def hofstadter_hamiltonian(q, alpha):
+    """Return sorted eigenvalues of the Harper Hamiltonian with flux α = p/q."""
     n = np.arange(q)
     diag = 2 * np.cos(2 * np.pi * alpha * n)
-    H = np.diag(diag) + np.roll(np.eye(q), 1, axis=0) + np.roll(np.eye(q), -1, axis=0)
+    H = np.diag(diag) + np.roll(np.eye(q), 1, axis=0) + \
+        np.roll(np.eye(q), -1, axis=0)
     return np.sort(np.linalg.eigvalsh(H))
+
 
 def compute_eigenvalues(p, q):
     """Eigenvalues for (p, q) if coprime, else empty."""
@@ -32,21 +38,26 @@ def compute_eigenvalues(p, q):
         return np.full(len(evals), alpha), evals
     return np.array([]), np.array([])
 
-def compute_q(q):                                                                 
+
+def compute_q(q):
     """Compute all eigenvalues for fixed q."""
     results = [compute_eigenvalues(p, q) for p in range(1, q+1)]
     alphas, energies = zip(*results)
     return np.concatenate(alphas), np.concatenate(energies)
 
+
 def generate_hofstadter_spectrum(max_q):
     """Return arrays of α and energies up to denominator max_q."""
     if not isinstance(max_q, int) or max_q <= 0:
         raise ValueError("max_q must be a positive integer")
-    results = Parallel(n_jobs=-1)(delayed(compute_q)(q) for q in range(1, max_q+1))
+    results = Parallel(n_jobs=-1)(delayed(compute_q)(q)
+                                  for q in range(1, max_q+1))
     alphas, energies = zip(*results)
     return np.concatenate(alphas), np.concatenate(energies)
 
 # ---------------- PLOTTING ----------------
+
+
 def plot_hofstadter_butterfly(alphas, energies, cfg: Config):
     """Plot Hofstadter butterfly from given spectrum arrays."""
     plt.style.use("dark_background")
@@ -62,15 +73,18 @@ def plot_hofstadter_butterfly(alphas, energies, cfg: Config):
     plt.contourf(X, Y, Z, levels=20, cmap=cfg.cmap_kde, alpha=0.5)
 
     # Scatter
-    plt.scatter(alphas, energies, s=1, c=energies, cmap=cfg.cmap_scatter, alpha=0.6, edgecolors="none")
+    plt.scatter(alphas, energies, s=1, c=energies,
+                cmap=cfg.cmap_scatter, alpha=0.6, edgecolors="none")
 
     plt.gca().set_aspect("auto")
     plt.xlabel("Magnetic Flux (α = p/q)", fontsize=12, color="white")
     plt.ylabel("Energy", fontsize=12, color="white")
-    plt.title("Hofstadter Butterfly with KDE Density", fontsize=14, color="white", pad=10)
+    plt.title("Hofstadter Butterfly with KDE Density",
+              fontsize=14, color="white", pad=10)
     plt.grid(True, linestyle="--", alpha=0.3, color="gray")
     plt.colorbar(label="Energy")
     plt.show()
+
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
