@@ -59,11 +59,15 @@ def generate_hofstadter_spectrum(max_q):
 
 
 def plot_hofstadter_butterfly(alphas, energies, cfg: Config):
-    """Plot Hofstadter butterfly from given spectrum arrays."""
+    """
+    Plot Hofstadter butterfly:
+    - Background = KDE density of states (no colorbar)
+    - Overlay = Eigenvalues colored by energy (with colorbar)
+    """
     plt.style.use("dark_background")
     plt.figure(figsize=cfg.figsize, dpi=cfg.dpi)
 
-    # KDE density
+    # KDE density (background shading)
     data = np.vstack([alphas, energies])
     kde = gaussian_kde(data, bw_method=cfg.bw_method)
     x_grid = np.linspace(0, 1, cfg.grid_res)
@@ -72,17 +76,25 @@ def plot_hofstadter_butterfly(alphas, energies, cfg: Config):
     Z = kde(np.vstack([X.ravel(), Y.ravel()])).reshape(X.shape)
     plt.contourf(X, Y, Z, levels=20, cmap=cfg.cmap_kde, alpha=0.5)
 
-    # Scatter
-    plt.scatter(alphas, energies, s=1, c=energies,
-                cmap=cfg.cmap_scatter, alpha=0.6, edgecolors="none")
+    # Eigenvalue scatter overlay
+    sc = plt.scatter(alphas, energies, s=1, c=energies,
+                     cmap=cfg.cmap_scatter, alpha=0.6, edgecolors="none")
 
+    # Axis and labels
     plt.gca().set_aspect("auto")
     plt.xlabel("Magnetic Flux (α = p/q)", fontsize=12, color="white")
     plt.ylabel("Energy", fontsize=12, color="white")
-    plt.title("Hofstadter Butterfly with KDE Density",
-              fontsize=14, color="white", pad=10)
+    plt.title(
+        "Hofstadter Butterfly\n"
+        "Background: KDE density of states\n"
+        "Overlay: Eigenvalues (color = energy, see colorbar)",
+        fontsize=12, color="white", pad=12
+    )
     plt.grid(True, linestyle="--", alpha=0.3, color="gray")
-    plt.colorbar(label="Energy")
+
+    # Single colorbar for scatter (energy)
+    plt.colorbar(sc, label="Energy")
+
     plt.show()
 
 
