@@ -13,7 +13,7 @@ class Config:
     max_q: int = 100
     grid_res: int = 100
     bw_method: float = 0.1
-    figsize: tuple = (6, 6)
+    figsize: tuple = (8, 6)
     dpi: int = 150
     cmap_kde: str = "coolwarm"
     cmap_scatter: str = "magma"
