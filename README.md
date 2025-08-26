@@ -2,13 +2,11 @@
 
 ## 📖 Historical Context
 
-The **Hofstadter butterfly** is a famous fractal pattern discovered by physicist **Douglas Hofstadter** in 1976. It appears when studying the motion of electrons on a two-dimensional lattice in the presence of a **perpendicular magnetic field**.
+The **Hofstadter butterfly** is a famous fractal pattern discovered by physicist **Douglas Hofstadter** in 1976. It appears when studying electrons on a **two-dimensional lattice** under a **perpendicular magnetic field**.
 
-The system is modeled by the **Harper (or Aubry-André-Harper) Hamiltonian**, which describes the tight-binding approximation of an electron hopping between lattice sites with an applied magnetic flux.
+This system can be modeled using the **Harper (or Aubry-André-Harper) Hamiltonian**, which describes electrons hopping between lattice sites under an applied magnetic flux. When the **magnetic flux per plaquette** is a rational number `alpha = p/q` (with `p` and `q` coprime), the spectrum splits into **q subbands**, forming a rich, self-similar pattern resembling a butterfly.
 
-When the **magnetic flux per plaquette** is a rational number \$\alpha = p/q\$, the spectrum splits into **\$q\$ subbands**, leading to a rich, self-similar structure that resembles a butterfly.
-
-This fractal spectrum is one of the most iconic results in condensed matter physics, with deep connections to:
+This fractal spectrum connects to:
 
 * **Bloch electrons in a magnetic field**
 * **Quasicrystals**
@@ -17,108 +15,78 @@ This fractal spectrum is one of the most iconic results in condensed matter phys
 
 ---
 
-## ⚛️ Mathematical Background
+## ⚛️ Implementation (1D Harper Hamiltonian)
 
-The Harper Hamiltonian for a \$q \times q\$ system with magnetic flux \$\alpha = p/q\$ is written as:
+This project reproduces the Hofstadter butterfly using a **one-dimensional chain of q sites** with a **quasiperiodic potential** controlled by `alpha`.
 
-$$
-H_{n,m} = 2 \cos(2 \pi \alpha n) \, \delta_{n,m}
-+\delta_{n,m+1} + \delta_{n,m-1}
-$$
+The Harper Hamiltonian for `q` sites:
 
-Here:
-
-* \$n, m \in {0, 1, \dots, q-1}\$ are lattice indices
-* \$\alpha = p/q\$ is the magnetic flux per plaquette (in units of the magnetic flux quantum)
-* \$\delta\$ is the Kronecker delta
-
-The eigenvalues of \$H\$ give the allowed **energy levels** of the system.
-
-When we scan \$\alpha \in \[0,1]\$, plotting the corresponding eigenvalues, the **Hofstadter butterfly** emerges.
-
----
-
-## 🧮 Code Overview
-
-This repository provides a **parallelized Python implementation** for generating and plotting the Hofstadter butterfly spectrum with additional visualization enhancements.
-
-### 🔑 Core Components
-
-#### 1. `hofstadter_hamiltonian(q, alpha)`
-
-Constructs the \$q \times q\$ Harper Hamiltonian matrix for flux \$\alpha = p/q\$, and returns its sorted eigenvalues.
-Optimized using NumPy for vectorized operations.
-
-#### 2. `compute_eigenvalues(p, q)`
-
-Computes eigenvalues for a single pair \$(p, q)\$ if \$\gcd(p, q) = 1\$.
-
-* Returns both \$\alpha = p/q\$ and the associated eigenvalues.
-* Ensures only **coprime pairs** are considered (avoiding redundant spectra).
-
-#### 3. `compute_q(q)`
-
-Computes eigenvalues for all valid numerators \$p\$ for a given denominator \$q\$.
-
-#### 4. `generate_hofstadter_spectrum(max_q=50)`
-
-Generates the complete spectrum for all \$\alpha = p/q\$ with denominators $q \leq \text{max q}$.
-
-* Uses **joblib** for parallel computation.
-* Returns two arrays:
-
-  * `alphas`: magnetic flux values
-  * `energies`: corresponding eigenvalues
-
-#### 5. `plot_hofstadter_butterfly(max_q=120, grid_res=200)`
-
-Plots the Hofstadter butterfly with:
-
-* **KDE density heatmap** (using SciPy’s `gaussian_kde`)
-* **Scatter overlay** with color-coded energies
-* Dark aesthetic style with smooth contours
-
----
-
-## 📊 Example Output
-
-Running:
-
-```bash
-python hofstadter_butterfly.py
+```text
+H_mn =
+  2 * cos(2 * pi * alpha * n)   if m = n
+  1                              if m = n+1 or m = n-1
+  0                              otherwise
+for m, n = 0, 1, ..., q-1
 ```
 
-will produce a high-resolution visualization of the Hofstadter butterfly:
+**Key points:**
 
-![Butterfly](./Butterfly.png)
+* The system is **1D**, representing a chain of `q` sites.
+* `2 * cos(2 * pi * alpha * n)` is the **on-site quasiperiodic potential**.
+* Off-diagonal terms `1` represent **nearest-neighbor hopping**.
+* **Periodic boundary conditions**: `H[0, q-1] = H[q-1, 0] = 1`.
+* Eigenvalues of this matrix are the **allowed energy levels**.
+
+Plotting eigenvalues versus `alpha` in `[0,1]` produces the **Hofstadter butterfly**, reproducing the same fractal pattern as the original 2D model.
 
 ---
 
-## 🎨 Understanding the Visualization
+## 🧮 Building It in Python
 
-The graphical output combines **two layers**:
+This repository provides a **parallelized Python implementation** using the 1D Harper Hamiltonian.
 
-### 1. KDE Density Map (background heatmap)
+**Steps:**
 
-* Computed using *kernel density estimation (KDE)*.
-* Represents the **density of states (DOS)** in the \$(\alpha, E)\$ plane.
-* Bright/hot regions = high concentration of eigenvalues (energy bands).
-* Dark/cool regions = low density → **spectral gaps**.
+1. **Construct the Hamiltonian**
 
-Mathematically, the DOS is estimated as:
+   * For a given `q` and `alpha = p/q`, build the Hamiltonian matrix.
+   * Use NumPy for fast vectorized operations.
 
-$$
-\rho(\alpha, E) \approx \frac{1}{N h^2} \sum_{i=1}^N
-K\!\left(\frac{\alpha-\alpha_i}{h}, \frac{E-E_i}{h}\right),
-$$
+2. **Filter coprime pairs**
 
-where \$K\$ is a Gaussian kernel, \$h\$ is the bandwidth, and \$(\alpha\_i, E\_i)\$ are eigenvalues.
+   * Only consider `p` and `q` coprime to avoid redundant spectra.
 
-### 2. Scatter Overlay (points)
+3. **Compute all eigenvalues**
 
-* Each point \$(\alpha, E)\$ corresponds to an **actual eigenvalue** computed from the Harper Hamiltonian.
-* The **color** of each point encodes its energy \$E\$ (see colorbar).
-* Ensures the **raw spectrum** is visible, not only the smoothed KDE.
+   * For denominators `q <= max_q`, compute the full set of eigenvalues.
+
+4. **Parallelization**
+
+   * Distribute computations using `joblib`.
+
+5. **Visualization**
+
+   * Scatter plot of eigenvalues (`alpha` vs. energy).
+   * KDE density heatmap to show regions of high density of states.
+
+---
+
+## 📊 Visualization
+
+The output combines **two layers**:
+
+1. **KDE Density Heatmap (background)**
+
+   * Represents **density of states** in the `(alpha, E)` plane.
+   * Bright regions = high density (energy bands), dark regions = gaps.
+
+2. **Scatter Overlay (points)**
+
+   * Each point `(alpha, E)` corresponds to an **actual eigenvalue**.
+   * Color encodes energy `E`.
+   * Ensures both **raw spectrum** and **smoothed density** are visible.
+
+> *Note: KDE heatmap uses Gaussian kernel density estimation; it highlights density, not exact pixel values.*
 
 ---
 
@@ -136,18 +104,20 @@ pip install numpy matplotlib joblib scipy
 python hofstadter.py
 ```
 
-### Adjust parameters
+### Parameters
 
-* `max_q`: controls the fineness of the spectrum (higher = more detailed but slower).
-* `grid_res`: resolution of the KDE heatmap.
+* `max_q`: max denominator for rational fluxes (higher = more detail).
+* `grid_res`: resolution of KDE heatmap.
 
 ---
 
 ## ⚡ Performance Notes
 
-* **Parallelization**: eigenvalue computations are distributed across available CPU cores via `joblib`.
-* **Vectorization**: the Hamiltonian is built using NumPy operations instead of Python loops.
-* **Concatenation**: eigenvalue arrays are concatenated efficiently to avoid list overhead.
+* **Parallelization**: CPU cores used via `joblib`.
+* **Vectorization**: NumPy used for matrix operations.
+* **Memory-efficient concatenation**: avoids Python list overhead.
+
+This allows `max_q` values up to 150 or more without excessive runtime.
 
 ---
 
@@ -158,4 +128,10 @@ python hofstadter.py
 
 ---
 
-✨ With this code, you can generate your own Hofstadter butterflies, visualize the **density of states**, and explore the fractal spectrum of quantum systems under magnetic fields.
+✨ With this code, you can generate your own **Hofstadter butterflies**, visualize the **density of states**, and explore the fractal spectrum of quantum systems under magnetic fields.
+
+---
+
+This version is **100% compatible with GitHub Markdown**, will render correctly in the repo, and preserves readability and structure.
+
+If you want, I can also **add small inline code highlights for function names from the Python script** so the README references the actual code more clearly. Do you want me to do that?
