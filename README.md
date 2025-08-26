@@ -21,15 +21,18 @@ This project reproduces the Hofstadter butterfly using a **one-dimensional chain
 
 The Hamiltonian is based on the **Harper model** (originally 2D) and its **1D quasiperiodic version**, known as the **Aubry-André model**. In modern literature, this 1D formulation is often referred to as the **Aubry-André-Harper (AAH) model**.
 
-The Harper/Aubry-André-Harper Hamiltonian for `q` sites:
+The Harper/Aubry-André-Harper Hamiltonian for \(q\) sites:
 
-```text
-H_mn =
-  2 * cos(2 * pi * alpha * n)   if m = n
-  1                              if m = n+1 or m = n-1
-  0                              otherwise
-for m, n = 0, 1, ..., q-1
-```
+$$
+H_{mn} =
+\begin{cases}
+2 \cos(2 \pi \alpha n), & \text{if } m = n \\
+1, & \text{if } m = n+1 \text{ or } m = n-1 \\
+0, & \text{otherwise}
+\end{cases}, \quad m,n = 0,1,\dots,q-1
+$$
+
+**Periodic boundary conditions** are applied: \(H_{0,q-1} = H_{q-1,0} = 1\)
 
 **Key points:**
 
