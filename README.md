@@ -121,17 +121,11 @@ This allows `max_q` values up to 150 or more without excessive runtime.
 
 ---
 
-## 📚 References
-
-* D. R. Hofstadter, *“Energy levels and wave functions of Bloch electrons in rational and irrational magnetic fields”*, Phys. Rev. B **14**, 2239 (1976).
-* M. Kohmoto, B. Sutherland, and C. Tang, *“Critical wave functions and a Cantor-set spectrum of a one-dimensional quasicrystal model”*, Phys. Rev. B **35**, 1020 (1987).
-
----
-
 ✨ With this code, you can generate your own **Hofstadter butterflies**, visualize the **density of states**, and explore the fractal spectrum of quantum systems under magnetic fields.
 
 ---
 
-This version is **100% compatible with GitHub Markdown**, will render correctly in the repo, and preserves readability and structure.
+## 📚 References
 
-If you want, I can also **add small inline code highlights for function names from the Python script** so the README references the actual code more clearly. Do you want me to do that?
+* D. R. Hofstadter, *“Energy levels and wave functions of Bloch electrons in rational and irrational magnetic fields”*, Phys. Rev. B **14**, 2239 (1976).
+* M. Kohmoto, B. Sutherland, and C. Tang, *“Critical wave functions and a Cantor-set spectrum of a one-dimensional quasicrystal model”*, Phys. Rev. B **35**, 1020 (1987).
