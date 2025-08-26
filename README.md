@@ -44,6 +44,8 @@ $$
 
 Plotting eigenvalues versus `alpha` in `[0,1]` produces the **Hofstadter butterfly**, reproducing the same fractal pattern as the original 2D Harper model.
 
+![Butterfly](Butterfly.png)
+
 ---
 
 ## 🧮 Building It in Python
