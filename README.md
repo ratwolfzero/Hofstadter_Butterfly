@@ -21,7 +21,8 @@ This project reproduces the Hofstadter butterfly using a **one-dimensional chain
 
 The Hamiltonian is based on the **Harper model** (originally 2D) and its **1D quasiperiodic version**, known as the **Aubry-André model**. In modern literature, this 1D formulation is often referred to as the **Aubry-André-Harper (AAH) model**.
 
-The Aubry-André-Harper Hamiltonian
+### The Aubry-André-Harper Hamiltonian
+
 For a system with q sites, the Hamiltonian matrix is defined as:
 
 $$
